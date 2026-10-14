@@ -3,7 +3,10 @@ import tempfile
 from datetime import date, timedelta
 
 donors = []
-stock = {"A+": 0, "A-": 0, "B+": 0, "B-": 0, "O+": 0, "O-": 0, "AB+": 0, "AB-": 0}
+stock = {
+    "A+": 0, "A-": 0, "B+": 0, "B-": 0,
+    "O+": 0, "O-": 0, "AB+": 0, "AB-": 0
+}
 COMPATIBLE = {
     "A+": ["A+", "A-", "O+", "O-"],
     "B+": ["B+", "B-", "O+", "O-"],
@@ -95,7 +98,7 @@ def main():
     print("Units for an A+ patient:", units_for("A+"))
     print("Units for a Z+ patient:", units_for("Z+"))
     print("Is O- universal?", is_universal("O-"))
-    print("Low stock groups:", low_stock()) # below 2 units
+    print("Low stock groups:", low_stock())  # below 2 units
     eligible = [
         donor["name"] for donor in donors if can_donate(donor)
     ]
