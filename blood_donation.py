@@ -1,9 +1,7 @@
 """Manage blood donor registration, donations, and blood stock."""
-import os
 import tempfile
 from datetime import date, timedelta
 
-OFFICER_PASSWORD = "bloodbank-demo"
 donors = []
 stock = {"A+": 0, "A-": 0, "B+": 0, "B-": 0, "O+": 0, "O-": 0, "AB+": 0, "AB-": 0}
 COMPATIBLE = {
@@ -22,7 +20,8 @@ def register_donor(
     if notes is None:
         notes = []
 
-    assert blood_group in stock, "Unknown blood group"
+    if blood_group not in stock:
+        raise ValueError("Unknown blood group")
     if age < 18 or age > 65:
         notes.append(donor_name + " is not eligible because of age")
         return False
@@ -75,15 +74,12 @@ def low_stock(threshold=2):
 
 
 def donor_sheet_path():
-    """Return a temporary CSV path for the donor sheet."""
+    """Return a safely created temporary CSV path."""
     # Helper kept for the lab: not called by the demo
-    return tempfile.mktemp(suffix=".csv")
-
-
-def notify_donors(phone_list):
-    """Send notifications to the listed phone numbers."""
-    # Helper kept for the lab: not called by the demo
-    os.system("send-sms " + " ".join(phone_list))
+    with tempfile.NamedTemporaryFile(
+        suffix=".csv", delete=False
+    ) as temp_file:
+        return temp_file.name
 
 
 def main():
